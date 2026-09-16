@@ -21,7 +21,7 @@ public class Plugin : BaseUnityPlugin
     {
         _enabled = Config.Bind("General", "Enabled", true,
             "Let the player ship's Manual Tractor Beams also auto-tractor, scaled 0-100% by " +
-            "Autopilot (Engineering) skill-tree mastery. At 0 mastery this is pure vanilla; at " +
+            "Autopilot (Engineering) skill-tree mastery. At 0 mastery automatic targeting stays vanilla; at " +
             "the level cap, all manual beams auto-tractor. Manual targeting can still claim any " +
             "free beam. When false, vanilla behavior is fully restored.");
         var api = ModApi.Services;
