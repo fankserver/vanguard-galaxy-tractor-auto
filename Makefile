@@ -9,13 +9,12 @@ BUILDDLL := $(BUILDDIR)/$(DLL)
 GAME_DIR := /mnt/c/Program Files (x86)/Steam/steamapps/common/Vanguard Galaxy
 PLUGIN_DIR := $(GAME_DIR)/BepInEx/plugins/VGTractorAuto
 
-# Sibling VGTTS checkout owns the canonical publicized Assembly-CSharp.dll stub.
-VGTTS_LIB := ../vanguard-galaxy-tts/VGTTS/lib
+VGAPI_DLL ?= ../vanguard-galaxy-api/VGModAPI.Abstractions/bin/Debug/netstandard2.1/VGModAPI.Abstractions.dll
 
 # Resolve dotnet — prefer explicit local SDK, fall back to PATH
 DOTNET   ?= $(shell command -v dotnet 2>/dev/null || echo /tmp/dnsdk/dotnet/dotnet)
 
-.PHONY: all build link-asm clean deploy check-bepinex
+.PHONY: all build test clean deploy check-bepinex
 
 all: build
 
@@ -26,17 +25,12 @@ check-bepinex:
 		exit 1 ; \
 	}
 
-# Symlink the VGTTS publicized Assembly-CSharp.dll into VGTractorAuto/lib/ so we
-# compile against the same stub as the other siblings (exposes private members).
-link-asm:
-	@mkdir -p VGTractorAuto/lib
-	@if [ ! -e "VGTractorAuto/lib/Assembly-CSharp.dll" ]; then \
-		ln -sf "$(abspath $(VGTTS_LIB))/Assembly-CSharp.dll" VGTractorAuto/lib/Assembly-CSharp.dll ; \
-		echo "Linked Assembly-CSharp.dll from $(VGTTS_LIB)" ; \
-	fi
+build:
+	@test -s "$(VGAPI_DLL)" || { echo 'Set VGAPI_DLL to the tractor-beam API build.'; exit 1; }
+	DOTNET_ROOT=$(dir $(DOTNET)) $(DOTNET) build VGTractorAuto/VGTractorAuto.csproj -c $(CONFIG) -p:VGAPI_DLL="$(abspath $(VGAPI_DLL))"
 
-build: link-asm
-	DOTNET_ROOT=$(dir $(DOTNET)) $(DOTNET) build VGTractorAuto/VGTractorAuto.csproj -c $(CONFIG)
+test:
+	$(DOTNET) test VGTractorAuto.Tests/VGTractorAuto.Tests.csproj -c $(CONFIG)
 
 deploy: build check-bepinex
 	@mkdir -p "$(PLUGIN_DIR)"
