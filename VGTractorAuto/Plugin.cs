@@ -27,7 +27,7 @@ public class Plugin : BaseUnityPlugin
         var api = ModApi.Services;
         _skillTrees = api.SkillTrees;
         _targeting = api.Equipment.ConfigurePlayerTractorModules(PluginGuid, ConfigureTractor);
-        _moduleTooltip = api.Tooltips.RegisterTractorModule(PluginGuid, DescribeTractor);
+        _moduleTooltip = api.Tooltips.RegisterShipModule(PluginGuid, DescribeTractor);
         _masteryTooltip = api.Tooltips.RegisterSkillTree(PluginGuid, DescribeMastery);
         Logger.LogInfo($"{PluginName} v{PluginVersion} loaded (VGModAPI equipment integration)");
     }
@@ -40,9 +40,9 @@ public class Plugin : BaseUnityPlugin
         return new TractorTargeting(module.BeamCount + extra, allowManualBorrowing: true);
     }
 
-    private void DescribeTractor(TractorModule module, Tooltip tooltip)
+    private void DescribeTractor(ShipModule module, Tooltip tooltip)
     {
-        if (_enabled.Value && module.ManualBeamCount > 0)
+        if (_enabled.Value && module.Kind == ShipModuleKind.Tractor && module.Tractor?.ManualBeamCount > 0)
             tooltip.AddLine("Manual beams also auto-tractor, scales with Autopilot mastery (VGTractorAuto)");
     }
 
