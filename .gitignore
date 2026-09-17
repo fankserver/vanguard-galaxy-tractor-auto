@@ -1,12 +1,7 @@
 bin/
 obj/
-# lib/Assembly-CSharp.dll is a PUBLICIZED stub (method signatures only, no IL) of the
-# game's proprietary assembly. It is committed so CI can compile on a public runner
-# (the real assembly takes over in-game via Mono late binding). Other lib binaries stay
-# ignored — locally they may be symlinks created by `make link-asm`.
-*/lib/*.dll
-*/lib/*.pdb
-!VGTractorAuto/lib/Assembly-CSharp.dll
+# Local compile-only references must not be committed.
+*/lib/
 *.user
 .vs/
 .idea/

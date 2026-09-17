@@ -17,17 +17,14 @@
 
   <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
-    <PackageReference Include="BepInEx.Core" Version="5.*" />
+    <PackageReference Include="BepInEx.Core" Version="5.*" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
     <PackageReference Include="UnityEngine.Modules" Version="6000.2.6" IncludeAssets="compile" />
-    <!-- Pinned to 2.10.x to match BepInEx 5's bundled HarmonyX; see VGEcho.csproj
-         for the full rationale (2.16 adds a MonoMod.Backports dep BepInEx 5 won't load). -->
-    <PackageReference Include="HarmonyX" Version="2.10.*" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>lib/Assembly-CSharp.dll</HintPath>
+    <Reference Include="VGModAPI.Abstractions">
+      <HintPath>$(VGAPI_DLL)</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
